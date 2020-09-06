@@ -77,7 +77,9 @@ var displayPlanRow = function(i, row) {
   var rowEl = $("<div>")
     .addClass("row");
   var timeEl = $("<div>")
-    .addClass("col-2 hour")
+    .addClass("col-2 hour");
+  var timeWrapper = $("<p>")
+    .addClass("p-3")
     .text(row.time);
   var plansEl = $("<div>")
     .addClass("col-8 overflow")
@@ -88,9 +90,10 @@ var displayPlanRow = function(i, row) {
     .addClass("description")
     .text(row.text);
   var saveEl = $("<div>")
-    .addClass("col-2 saveBtn")
+    .addClass("col-2 saveBtn d-flex justify-content-center align-items-center")
     .html('<i class="far fa-save"></i>');
-  //appending the children to their parents  
+  //appending the children to their parents 
+  timeEl.append(timeWrapper); 
   plansEl.append(textEl);
   rowEl.append(timeEl);
   rowEl.append(plansEl);
