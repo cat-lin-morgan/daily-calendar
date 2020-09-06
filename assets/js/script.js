@@ -9,38 +9,37 @@ var currentTime = function () {
 }
 
 var getRowColor = function (rowTime) {
+  var timeIsInCurrentHour = moment().isBetween(rowTime, moment(rowTime).add(1, "h"));
+  var timeIsBeforeRowTime = moment().isAfter(rowTime);
+  var timeIsAfterRowTime = moment().isBefore(rowTime);
   //if time is current make red
-  if (moment().isBetween(rowTime, moment(rowTime).add(1, "h"))) {
+  if (timeIsInCurrentHour) {
     return "present";
   }
   //if time is before now then grey
-  if (moment().isAfter(rowTime)) {
+  if (timeIsBeforeRowTime) {
     return "past";
   }
   //if time is in future make green
-  if (moment().isBefore(rowTime)) {
+  if (timeIsAfterRowTime) {
     return "future";
   }
-  debugger;
 } 
 
 var displayPlanRow = function(i, row) {
   var rowEl = $("<div>")
     .addClass("row");
   var timeEl = $("<div>")
-    .addClass("col-2")
+    .addClass("col-2 hour")
     .text(row.time);
   var plansEl = $("<div>")
     .addClass("col-8")
     .addClass(getRowColor(row.timeStamp))
     .attr("id", row.time);
   var saveEl = $("<div>")
-    .addClass("col-2");
-  var saveBtn = $("<button>")
-    .addClass("saveBtn")
-    .html('<svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15"><path d="M4.5 14.5v-3a1 1 0 011-1h4a1 1 0 011 1v3m3 0h-12a1 1 0 01-1-1v-12a1 1 0 011-1h8.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V13.5a1 1 0 01-1 1z" stroke="currentColor"></path></svg>');
-
-  saveEl.append(saveBtn);
+    .addClass("col-2 saveBtn")
+    .html('<i class="far fa-save"></i>');
+  //appending the children to their parents  
   rowEl.append(timeEl);
   rowEl.append(plansEl);
   rowEl.append(saveEl);
