@@ -6,8 +6,55 @@ var plans = [];
 var currentTime = function () {
   var now = moment().format("MM ddd, YYYY hh:mm:ss a");
   //append the current time and date to the header
+  $("#currentDay").text(now);
 }
 
+//make div a text area
+var startEditPlans = function () {
+  //this is the div col-8 overflow
+  var parentClass = $(this).attr("class");
+  var parentIndex = $(this).attr("data-plan-index");
+  //grab target from the event
+  var text = $(this)
+    .children(".description")
+    .text();
+  //make new box
+  var textArea = $("<textarea>")
+    .addClass(parentClass)
+    .attr("data-plan-index", parentIndex)
+    .val(text)
+    .on("blur", stopEditPlans);
+
+  $(this).replaceWith(textArea);
+
+  textArea.trigger("focus");
+};
+
+var stopEditPlans = function () {
+  var parentClass = $(this).attr("class");
+  var parentIndex = $(this).attr("data-plan-index");
+  //get text area's current value and text
+  var text = $(this)
+    .val();
+  //updating the global variable plans
+  plans[parentIndex].text = text;
+  //remake div
+  var plansEl = $("<div>")
+    .addClass(parentClass)
+    .attr("data-plan-index", parentIndex)
+    .on("click", startEditPlans);
+  //remake p element
+  var paraEl = $("<p>")
+    .addClass("description")
+    .text(text);
+  //append p to div
+  plansEl.append(paraEl);
+  //replace text with p element
+  $(this).replaceWith(plansEl);
+};
+
+
+//each time block will be color coated for current time, past, and future
 var getRowColor = function (rowTime) {
   var timeIsInCurrentHour = moment().isBetween(rowTime, moment(rowTime).add(1, "h"));
   var timeIsBeforeRowTime = moment().isAfter(rowTime);
@@ -33,17 +80,23 @@ var displayPlanRow = function(i, row) {
     .addClass("col-2 hour")
     .text(row.time);
   var plansEl = $("<div>")
-    .addClass("col-8")
+    .addClass("col-8 overflow")
     .addClass(getRowColor(row.timeStamp))
-    .attr("id", row.time);
+    .attr("data-plan-index", i)
+    .on("click", startEditPlans);
+  var textEl = $("<p>")
+    .addClass("description")
+    .text(row.text);
   var saveEl = $("<div>")
     .addClass("col-2 saveBtn")
     .html('<i class="far fa-save"></i>');
   //appending the children to their parents  
+  plansEl.append(textEl);
   rowEl.append(timeEl);
   rowEl.append(plansEl);
   rowEl.append(saveEl);
   $("#container").append(rowEl);
+  
 
   //call function that makes plan input
   createPlan(row);
@@ -54,27 +107,18 @@ var displayPlanRow = function(i, row) {
 var createPlan = function (row) {
   
 }
+var auditPlan = function () {
+
+}
+
 
 var displayPlanner = function () {
   $.each(plans, displayPlanRow);
 }
 
-//each time block will be color coated for current time, past, and future
-//check the date
-//label time grey if past
-//label 
 
 // when you click on time block there is input 
 //you can save event or delete
-
-// you can edit event or date
-var auditTime = function () {
-
-}
-
-var auditPlan = function () {
-
-}
 
 //save event to local storage
 var savePlans = function () {
@@ -92,47 +136,47 @@ var loadPlans = function () {
       { // row
         time: "9AM", 
         timeStamp: `${moment().format("MM/DD/YYYY")} 09:00 am`,
-        plans: [], 
+        text: "", 
       },
       {
         time: "10AM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 10:00 am`,
-        plans: [],
+        text: "",
       },
       {
         time: "11AM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 11:00 am`,
-        plans: [],
+        text: "",
       },
       {
         time: "12PM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 12:00 pm`,
-        plans: [],
+        text: "",
       },
       {
         time: "1PM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 01:00 pm`,
-        plans: [],
+        text: "",
       },
       {
         time: "2PM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 02:00 pm`,
-        plans: [],
+        text: "",
       },
       {
         time: "3PM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 03:00 pm`,
-        plans: [],
+        text: "",
       },
       {
         time: "4PM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 04:00 pm`,
-        plans: [],
+        text: "",
       },
       {
         time: "5PM",
         timeStamp: `${moment().format("MM/DD/YYYY")} 05:00 pm`,
-        plans: [],
+        text: "",
       }
     ]
   }
