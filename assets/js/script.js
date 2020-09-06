@@ -9,16 +9,22 @@ var currentTime = function () {
 }
 
 var getRowColor = function (rowTime) {
-  
-  //if time is before now then grey
-
   //if time is current make red
+  if (moment().isBetween(rowTime, moment(rowTime).add(1, "h"))) {
+    return "present";
+  }
+  //if time is before now then grey
+  if (moment().isAfter(rowTime)) {
+    return "past";
+  }
   //if time is in future make green
+  if (moment().isBefore(rowTime)) {
+    return "future";
+  }
   debugger;
 } 
 
 var displayPlanRow = function(i, row) {
-  console.log(row);
   var rowEl = $("<div>")
     .addClass("row");
   var timeEl = $("<div>")
@@ -26,7 +32,7 @@ var displayPlanRow = function(i, row) {
     .text(row.time);
   var plansEl = $("<div>")
     .addClass("col-8")
-    .addClass(getRowColor(row.time))
+    .addClass(getRowColor(row.timeStamp))
     .attr("id", row.time);
   var saveEl = $("<div>")
     .addClass("col-2");
@@ -86,38 +92,47 @@ var loadPlans = function () {
       // i
       { // row
         time: "9AM", 
+        timeStamp: `${moment().format("MM/DD/YYYY")} 09:00 am`,
         plans: [], 
       },
       {
         time: "10AM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 10:00 am`,
         plans: [],
       },
       {
         time: "11AM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 11:00 am`,
         plans: [],
       },
       {
         time: "12PM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 12:00 pm`,
         plans: [],
       },
       {
         time: "1PM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 01:00 pm`,
         plans: [],
       },
       {
         time: "2PM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 02:00 pm`,
         plans: [],
       },
       {
         time: "3PM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 03:00 pm`,
         plans: [],
       },
       {
         time: "4PM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 04:00 pm`,
         plans: [],
       },
       {
         time: "5PM",
+        timeStamp: `${moment().format("MM/DD/YYYY")} 05:00 pm`,
         plans: [],
       }
     ]
