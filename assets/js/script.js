@@ -4,10 +4,10 @@ var plans = [];
 
 //in the header it will display current day
 var currentTime = function () {
-  var now = moment().format("MM ddd, YYYY hh:mm:ss a");
+  var now = moment().format("MMM Do, YYYY hh:mm:ss a");
   //append the current time and date to the header
   $("#currentDay").text(now);
-}
+};
 
 //make div a text area
 var startEditPlans = function () {
@@ -71,7 +71,7 @@ var getRowColor = function (rowTime) {
   if (timeIsAfterRowTime) {
     return "future";
   }
-} 
+};
 
 var displayPlanRow = function(i, row) {
   var rowEl = $("<div>")
@@ -82,7 +82,7 @@ var displayPlanRow = function(i, row) {
     .addClass("p-3")
     .text(row.time);
   var plansEl = $("<div>")
-    .addClass("col-8 overflow")
+    .addClass("col-8 overflow p-3")
     .addClass(getRowColor(row.timeStamp))
     .attr("data-plan-index", i)
     .on("click", startEditPlans);
@@ -91,7 +91,9 @@ var displayPlanRow = function(i, row) {
     .text(row.text);
   var saveEl = $("<div>")
     .addClass("col-2 saveBtn d-flex justify-content-center align-items-center")
-    .html('<i class="far fa-save"></i>');
+    .attr("data-plan-index", i)
+    .html('<i class="far fa-save"></i>')
+    .on("click", savePlans);
   //appending the children to their parents 
   timeEl.append(timeWrapper); 
   plansEl.append(textEl);
@@ -99,42 +101,31 @@ var displayPlanRow = function(i, row) {
   rowEl.append(plansEl);
   rowEl.append(saveEl);
   $("#container").append(rowEl);
-  
-
-  //call function that makes plan input
-  createPlan(row);
 };
-
-
-//function that creates each plan 
-var createPlan = function (row) {
-  
-}
-var auditPlan = function () {
-
-}
-
 
 var displayPlanner = function () {
   $.each(plans, displayPlanRow);
-}
-
-
-// when you click on time block there is input 
-//you can save event or delete
+};
 
 //save event to local storage
 var savePlans = function () {
-  localStorage.setItem("plans", JSON.stringify(plans));
+  var planIndex = $(this).attr("data-plan-index");
+  // get plans from local storage
+  var localStoragePlans = loadPlans();
+  // use plan index to copy specific plan from global
+  localStoragePlans[planIndex] = plans[planIndex]; // and set it in local storage
+
+  // save local storage
+  localStorage.setItem("plans", JSON.stringify(localStoragePlans));
 };
 
 //load plans from local storage
 var loadPlans = function () {
-  plans = JSON.parse(localStorage.getItem("plans"));
+  var localStoragePlans = JSON.parse(localStorage.getItem("plans"));
 
   // if nothing in localStorage, create a new object to track all task status arrays
-  if (!plans) {
-    plans =  [
+  if (!localStoragePlans) {
+    localStoragePlans =  [
       // i
       { // row
         time: "9AM", 
@@ -183,15 +174,16 @@ var loadPlans = function () {
       }
     ]
   }
+  return localStoragePlans;
 };
 
 var startApplication = function () {
   //will load data from local storage
-  loadPlans();
+  plans = loadPlans();
   //will display it on page
   displayPlanner();
   //display current day
-  currentTime();
+  setInterval(currentTime, 1000); //added seconds to make responsive clock for learning experiment
 };
 
 startApplication();
