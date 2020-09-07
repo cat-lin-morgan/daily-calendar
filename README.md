@@ -1,1 +1,1 @@
-# daily-calendar
+# Daily Calendar Application
